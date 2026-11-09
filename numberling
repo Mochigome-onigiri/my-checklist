@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家庭内ルール＆お仕置き統合システム</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 15px; background: #f4f6f9; color: #333; line-height: 1.5; }
+  h1 { font-size: 1.2rem; margin-bottom: 5px; color: #1a252f; }
+  .sub { font-size: 0.8rem; color: #666; margin-bottom: 15px; }
+  
+  .card { background: #fff; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card-title { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-bottom: 12px; color: #2c3e50; }
+  
+  .section-title { font-weight: bold; background: #edf2f7; padding: 6px 10px; margin-top: 15px; border-radius: 4px; font-size: 0.9rem; color: #4a5568; }
+  .check-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #edf2f7; font-size: 0.88rem; cursor: pointer; }
+  .check-item input[type="checkbox"] { width: 20px; height: 20px; margin-right: 10px; }
+  .item-text { flex-grow: 1; }
+  .pts-minus { font-weight: bold; color: #e53e3e; margin-left: 8px; white-space: nowrap; }
+  .pts-plus { font-weight: bold; color: #2b6cb0; margin-left: 8px; white-space: nowrap; }
+
+  .locked-box { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 8px; padding: 20px; text-align: center; color: #6c757d; font-weight: bold; margin-top: 10px; }
+  
+  .result-box { background: #fff; border: 2px solid #2b6cb0; padding: 12px; border-radius: 8px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+  .score-display { font-size: 1.1rem; font-weight: bold; text-align: center; }
+  .judge-display { font-weight: bold; text-align: center; margin-top: 4px; color: #2b6cb0; font-size: 1rem; }
+  
+  .btn { display: block; width: 100%; padding: 12px; background: #3498db; color: #fff; font-weight: bold; text-align: center; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; margin-top: 10px; }
+  .btn-confirm { background: #e53e3e; }
+  .btn-share { background: #07c755; }
+  .btn:disabled { background: #bdc3c7; cursor: not-allowed; display: none; }
+
+  .archive-card { background: #f8f9fa; border-left: 4px solid #2b6cb0; padding: 12px; margin-bottom: 10px; font-size: 0.85rem; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .archive-date { font-weight: bold; color: #666; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>家庭内ルール管理システム</h1>
+<div class="sub">減点方式評価・詳細判定・蓄積型アーカイブツール</div>
+
+<!-- STEP 1: 家庭内ルール・チェックリスト（100点満点からの減点方式） -->
+<div class="card">
+  <div class="card-title">STEP 1: 家庭内ルール評価 (減点方式)</div>
+  <div style="font-size:0.8rem; color:#e53e3e; margin-bottom:10px;">※違反・未達成の項目にチェックを入れてください（減点されます）</div>
+  
+  <div class="section-title">1. 喫煙・スマホ（依存防止）</div>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">指定場所での喫煙、吸い殻の即時処理怠り</span><span class="pts-minus">-10点</span></label>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">吸い終わった後、動画の切り替え遅れ・ダラダラ行動</span><span class="pts-minus">-10点</span></label>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">深夜のダラダラ視聴、決めた時間の就寝失敗</span><span class="pts-minus">-10点</span></label>
+
+  <div class="section-title">2. 生活の綻び（環境整備）</div>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">食器をシンクに放置</span><span class="pts-minus">-10点</span></label>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">服や私物の放置・脱ぎっぱなし</span><span class="pts-minus">-10点</span></label>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">郵便物・レシートの溜め込み</span><span class="pts-minus">-10点</span></label>
+
+  <div class="section-title">3. 安全・誠実（重要案件）</div>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">戸締まり・火の元確認の不徹底</span><span class="pts-minus">-10点</span></label>
+  <label class="check-item"><input type="checkbox" value="10" class="rule-cb"><span class="item-text">失敗や予定外の出費の報告漏れ・隠蔽</span><span class="pts-minus">-10点</span></label>
+
+  <div class="section-title">4. 心の在り方（関係性）</div>
+  <label class="check-item"><input type="checkbox" value="7" class="rule-cb"><span class="item-text">疲れを理由とした八つ当たり</span><span class="pts-minus">-7点</span></label>
+  <label class="check-item"><input type="checkbox" value="7" class="rule-cb"><span class="item-text">ワンちゃんへの疎か・配慮不調</span><span class="pts-minus">-7点</span></label>
+  <label class="check-item"><input type="checkbox" value="6" class="rule-cb"><span class="item-text">「無理・限界」の溜め込み・不誠実な対応</span><span class="pts-minus">-6点</span></label>
+
+  <div style="margin-top:15px; padding:10px; background:#f8f9fa; border-radius:6px; text-align:center;">
+    <div style="font-size:0.9rem; color:#666;">残りスコア（初期値 100点）</div>
+    <div style="font-size:1.5rem; font-weight:bold; color:#2b6cb0;"><span id="ruleTotal">100</span> / 100点</div>
+    <div id="ruleStatus" style="font-weight:bold; margin-top:5px; font-size:0.95rem; color:#38a169;">【合格水準】残り50点以上を維持中</div>
+  </div>
+
+  <button class="btn btn-confirm" id="btnConfirmStep1" onclick="confirmStep1()">家庭内ルールの結果を確定する</button>
+</div>
+
+<!-- STEP 2: お仕置き後チェック表 -->
+<div class="card">
+  <div class="card-title">STEP 2: お仕置き後チェック表 (30点満点)</div>
+  
+  <div id="lockedArea" class="locked-box">
+    🔒 STEP 1を確定後、スコアが50点未満の場合のみ<br>お仕置き後チェック表が解放されます
+  </div>
+
+  <div id="unlockedArea" style="display: none;">
+    <div class="section-title">態度・理解</div>
+    <label class="check-item"><input type="checkbox" value="3" class="post-cb"><span class="item-text">なぜお仕置きされているのか、何が悪かったのか理解できている</span><span class="pts-plus">3点</span></label>
+    <label class="check-item"><input type="checkbox" value="3" class="post-cb"><span class="item-text">謝罪した</span><span class="pts-plus">3点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">痛みが原因でお尻が逃げてしまう事がなかった</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">お尻が逃げてしまっても、自ら元の姿勢にもどった</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="1" class="post-cb"><span class="item-text">お尻が逃げてしまっても、カーが促せば元の位置にもどった</span><span class="pts-plus">1点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">お仕置きを放棄するような言動がなかった</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">言い訳をしなかった</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">お仕置き中に口答えや抵抗がなかった</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">はぐらかさずに聞かれたことには答えた</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="1" class="post-cb"><span class="item-text">お仕置き中に返事をきちんとした</span><span class="pts-plus">1点</span></label>
+
+    <div class="section-title">時間</div>
+    <label class="check-item"><input type="checkbox" value="2" class="post-cb"><span class="item-text">当日、時間通りに来た</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="1" class="post-cb"><span class="item-text">5分前に到着していた</span><span class="pts-plus">1点</span></label>
+
+    <div class="section-title">終わり</div>
+    <label class="check-item"><input type="checkbox" value="1" class="post-cb"><span class="item-text">カーのお仕置きにお礼を言った</span><span class="pts-plus">1点</span></label>
+
+    <div class="section-title">余罪・再発（※）</div>
+    <label class="check-item"><input type="checkbox" value="2" id="m1" class="post-cb"><span class="item-text">他に余罪がない（※）</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" id="m2" class="post-cb"><span class="item-text">短期間（3週間以内）にお仕置き案件を繰り返していない（※）</span><span class="pts-plus">2点</span></label>
+    <label class="check-item"><input type="checkbox" value="2" id="m3" class="post-cb"><span class="item-text">同じ内容で過去にお仕置きを受けていない（※）</span><span class="pts-plus">2点</span></label>
+
+    <div class="result-box">
+      <div class="score-display">後チェック合計: <span id="postTotal">0</span> / 30点</div>
+      <div class="judge-display" id="postJudge">判定: 選択してください</div>
+    </div>
+
+    <button class="btn btn-confirm" id="btnConfirmStep2" onclick="confirmStep2()" style="display:none;">お仕置き後チェック結果を確定・保存する</button>
+  </div>
+</div>
+
+<!-- 確定アーカイブ表示エリア（蓄積型） -->
+<div class="card" id="archiveSection" style="display:none;">
+  <div class="card-title">📜 確定スコア・アーカイブ履歴一覧</div>
+  <div id="archiveContent"></div>
+  <button class="btn btn-share" style="margin-top:15px;" onclick="shareLatestResult()">最新の確定結果をコピー</button>
+  <button class="btn" style="margin-top:10px; background:#718096;" onclick="resetSystem()">次の週へ（評価を初期化する）</button>
+</div>
+
+<script>
+let currentRuleScore = 100;
+let currentPostScore = 0;
+let isStep1Confirmed = false;
+let isStep2Confirmed = false;
+let latestText = "";
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.rule-cb').forEach(cb => {
+    cb.addEventListener('change', calcRuleScore);
+  });
+  document.querySelectorAll('.post-cb').forEach(cb => {
+    cb.addEventListener('change', calcPostCheck);
+  });
+});
+
+function calcRuleScore() {
+  if (isStep1Confirmed) return;
+  let minusTotal = 0;
+  document.querySelectorAll('.rule-cb').forEach(cb => { if (cb.checked) minusTotal += parseInt(cb.value); });
+  currentRuleScore = Math.max(0, 100 - minusTotal);
+  document.getElementById('ruleTotal').innerText = currentRuleScore;
+
+  const ruleStatus = document.getElementById('ruleStatus');
+  if (currentRuleScore < 50) {
+    ruleStatus.style.color = "#e53e3e";
+    ruleStatus.innerText = "【要お仕置き】50点未満です。確定ボタンを押すとチェック表が開きます";
+  } else {
+    ruleStatus.style.color = "#38a169";
+    ruleStatus.innerText = "【合格水準】残り50点以上を維持中";
+  }
+}
+
+function confirmStep1() {
+  if (isStep1Confirmed) return;
+  if (!confirm(`家庭内ルールのスコアを【 ${currentRuleScore}点 】で確定しますか？\n確定後はチェックの変更ができません。`)) return;
+
+  isStep1Confirmed = true;
+  document.querySelectorAll('.rule-cb').forEach(cb => cb.disabled = true);
+  
+  const btnStep1 = document.getElementById('btnConfirmStep1');
+  btnStep1.disabled = true;
+  btnStep1.style.display = "none";
+
+  if (currentRuleScore < 50) {
+    document.getElementById('lockedArea').style.display = "none";
+    document.getElementById('unlockedArea').style.display = "block";
+    alert(`家庭内ルールが確定しました（${currentRuleScore}点）。お仕置き後チェック表が解放されました。`);
+  } else {
+    addArchive("合格（お仕置きなし）");
+    alert(`家庭内ルールが確定しました（${currentRuleScore}点）。合格基準達成のためお仕置きは不要です。`);
+  }
+}
+
+function calcPostCheck() {
+  if (isStep2Confirmed) return;
+
+  let total = 0;
+  document.querySelectorAll('.post-cb').forEach(cb => { if (cb.checked) total += parseInt(cb.value); });
+  currentPostScore = total;
+
+  const m1 = document.getElementById('m1').checked;
+  const m2 = document.getElementById('m2').checked;
+  const m3 = document.getElementById('m3').checked;
+  const mAll = m1 && m2 && m3;
+  
+  let judgeText = "";
+  let canConfirm = false;
+  const btnStep2 = document.getElementById('btnConfirmStep2');
+
+  if (total <= 10) {
+    judgeText = "判定: 躾直しが必要（点数が不足しています）";
+    canConfirm = false;
+  } else if (total <= 22) {
+    if (mAll) {
+      judgeText = "判定: (※)余罪項目クリアのため お仕置き完了";
+      canConfirm = true;
+    } else {
+      judgeText = "判定: 追加のお仕置きが必要（※余罪項目をすべてチェックしてください）";
+      canConfirm = false;
+    }
+  } else {
+    judgeText = "判定: お仕置き完了";
+    canConfirm = true;
+  }
+  
+  document.getElementById('postTotal').innerText = total;
+  document.getElementById('postJudge').innerText = judgeText;
+
+  if (canConfirm) {
+    btnStep2.style.display = "block";
+  } else {
+    btnStep2.style.display = "none";
+  }
+}
+
+function confirmStep2() {
+  if (isStep2Confirmed) return;
+  if (!confirm("お仕置き後チェック結果を確定しますか？\n確定後は変更ができません。")) return;
+
+  isStep2Confirmed = true;
+  document.querySelectorAll('.post-cb').forEach(cb => cb.disabled = true);
+  document.getElementById('btnConfirmStep2').style.display = "none";
+
+  let postJudgeText = document.getElementById('postJudge').innerText;
+  addArchive(postJudgeText);
+  alert("お仕置き後チェックが確定・保存されました。");
+}
+
+function getFormattedDate() {
+  const now = new Date();
+  return `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+}
+
+function addArchive(judgeResultText) {
+  const dateStr = getFormattedDate();
+  const archiveContent = document.getElementById('archiveContent');
+  const archiveSection = document.getElementById('archiveSection');
+
+  let html = `<div class="archive-card">`;
+  html += `<div class="archive-date">📅 確定日時: ${dateStr}</div>`;
+  html += `<div><strong>・家庭内ルール評価:</strong> ${currentRuleScore}点 / 100点 </div>`;
+  
+  if (currentRuleScore < 50) {
+    html += `<div><strong>・お仕置き後チェック:</strong> ${currentPostScore}点 / 30点</div>`;
+    html += `<div style="margin-top:4px; color:#e53e3e; font-weight:bold;">${judgeResultText}</div>`;
+  } else {
+    html += `<div style="margin-top:4px; color:#38a169; font-weight:bold;">判定: ${judgeResultText}</div>`;
+  }
+  html += `</div>`;
+
+  // 既存の履歴の上に新しい履歴を追加して蓄積していく
+  archiveContent.innerHTML = html + archiveContent.innerHTML;
+  archiveSection.style.display = "block";
+
+  // 共有用テキスト作成
+  latestText = `【家庭内管理・確定アーカイブ記録】\n確定日時: ${dateStr}\n家庭内ルール評価: ${currentRuleScore}点 / 100点\n`;
+  if (currentRuleScore < 50) {
+    latestText += `お仕置き後チェック: ${currentPostScore}点 / 30点\n${judgeResultText}`;
+  } else {
+    latestText += `判定: ${judgeResultText}`;
+  }
+  
+  archiveSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function shareLatestResult() {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(latestText).then(() => {
+      alert("最新の確定結果をコピーしました！LINE等で共有可能です。\n\n" + latestText);
+    });
+  } else {
+    alert(latestText);
+  }
+}
+
+function resetSystem() {
+  if (!confirm("次の週に向けてシステムを初期状態（100点・未チェック）にリセットしますか？\n（※これまでのアーカイブ履歴は保持されます）")) return;
+
+  currentRuleScore = 100;
+  currentPostScore = 0;
+  isStep1Confirmed = false;
+  isStep2Confirmed = false;
+
+  document.querySelectorAll('.rule-cb').forEach(cb => {
+    cb.checked = false;
+    cb.disabled = false;
+  });
+  document.getElementById('ruleTotal').innerText = "100";
+  const ruleStatus = document.getElementById('ruleStatus');
+  ruleStatus.style.color = "#38a169";
+  ruleStatus.innerText = "【合格水準】残り50点以上を維持中";
+  
+  const btnStep1 = document.getElementById('btnConfirmStep1');
+  btnStep1.disabled = false;
+  btnStep1.style.display = "block";
+  btnStep1.innerText = "家庭内ルールの結果を確定する";
+
+  document.querySelectorAll('.post-cb').forEach(cb => {
+    cb.checked = false;
+    cb.disabled = false;
+  });
+  document.getElementById('lockedArea').style.display = "block";
+  document.getElementById('unlockedArea').style.display = "none";
+  document.getElementById('postTotal').innerText = "0";
+  document.getElementById('postJudge').innerText = "判定: 選択してください";
+  document.getElementById('btnConfirmStep2').style.display = "none";
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
